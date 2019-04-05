@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import Axios from 'axios';
-import { Route } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import FriendList from './Components/FriendList';
 import NewFriend from './Components/NewFriend';
+import Friend from './Components/Friend';
+import Background from './Components/Background'
+
+
 class App extends Component {
   constructor() {
     super();
@@ -11,6 +15,10 @@ class App extends Component {
       friends: []
     };
   }
+
+  updateFriends = newFriends => {
+    this.setState({ friends: newFriends });
+  };
 
   componentDidMount() {
     this.fetchData();
@@ -31,22 +39,36 @@ class App extends Component {
     return (
       <div className="App">
         <nav>
-          <div className='left'><h1>FriendsList</h1>
-          <form><input placeholder="search" /><button className='searchbtn'><i class="fas fa-search"></i></button></form>
+          <div className="left">
+            <h1><NavLink to='/'>FriendsList</NavLink></h1>
+            <form>
+              <input placeholder="search" />
+              <button className="searchbtn">
+                <i className="fas fa-search" />
+              </button>
+            </form>
           </div>
           <div className="navlinks">
-            
-            <p>Welcome, Jasmine!</p> <p>Home</p>
-            <i class="fas fa-user-friends" />
-            <i class="fas fa-bell" />
+            <p>Welcome, Jasmine!</p> <NavLink to='/'><p>Home</p></NavLink>
+            <NavLink to='/friendlist'><i className="fas fa-user-friends" /></NavLink>
+            <i className="fas fa-bell" />
           </div>
         </nav>
 
-        <Route path="/" component={NewFriend} />
+     {/* <Background/> */}
+      <Route exact path='/' component={Background}/>
 
         <Route
-          exact
-          path="/"
+          path="/friendlist"
+          render={props => (
+            <NewFriend {...props} updateFriends={this.updateFriends} />
+          )}
+        />
+
+
+        <Route
+          // exact
+          path="/friendlist"
           render={props => (
             <FriendList {...props} friends={this.state.friends} />
           )}
